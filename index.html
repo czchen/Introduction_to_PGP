@@ -59,8 +59,8 @@
 				<section>
 					<h2>Secnario - Verify Signature</h2>
 					<ul>
-						<li>You sign a message with your <em>private key</em></li>
-						<li>Recipient verify the message with your <em>public key</em></li>
+						<li>You sign a message with your <em>private key.</em></li>
+						<li>Recipient verify the message with your <em>public key.</em></li>
 					</ul>
 					<p></p>
 				</section>
@@ -68,31 +68,126 @@
 				<section>
 					<h2>Secnario - Receive Encrypted Message</h2>
 					<ul>
-						<li>Someone encrypts a message with your <em>public key</em></li>
-						<li>You decrypt the message with your <em>private key</em></li>
+						<li>Someone encrypts a message with your <em>public key</em>.</li>
+						<li>You decrypt the message with your <em>private key</em>.</li>
 					</ul>
 				</section>
 
 				<section>
 					<h2>Requirement</h2>
 					<ul>
-						<li>Others need to know your public key if you want to send a signed message</li>
-						<li>You need to know others public key if you want to send encrypted message</li>
+						<li>Others need to know your public key if you want to send a signed message.</li>
+						<li>You need to know others public key if you want to send encrypted message.</li>
 					</ul>
 				</section>
 
 				<section>
-					<p>In short, you need to join keysigning party to ensure the ownership of PGP key</p>
+					<p>In short, you need to join keysigning party to ensure the ownership of PGP key.</p>
 				</section>
 
 				<section>
-					<p>You need to have a PGP key first before joining keysigning party</p>
-					<p>Tne <a href="http://www.gnupg.org/">GNU Privacy Guard (GnuPG)</a> is used to generate PGP key</p>
+					<p>You need to have a PGP key first before joining keysigning party.</p>
+					<p>Tne <a href="http://www.gnupg.org/">GNU Privacy Guard (GnuPG)</a> is used to generate PGP key.</p>
+				</section>
+
+				<section>
+					<p>A key in GnuPG may contain the following items:</p>
+					<ul>
+						<li>master key</li>
+						<li>key usage</li>
+						<li>fingerprint</li>
+						<li>expired date</li>
+						<li>subkey</li>
+						<li>uid</li>
+						<li>sig</li>
+					</ul>
+				</section>
+
+				<section>
+					<p>Master key is key of key. It shall be stored in offline media. It is used only in the following scenarios <em>only</em>:</p>
+					<ul>
+						<li>when you certify someone else's key</li>
+						<li>when you need to create a new subkey</li>
+						<li>when you need to revoke the subkeys</li>
+					</ul>
+				</section>
+
+				<section>
+					<p>Usage is the capability of key:</p>
+					<ul>
+						<li>S: Key is good for signatures.</li>
+						<li>E: Key is good for encryption.</li>
+						<li>C: Key is also good to certify other keys.</li>
+						<li>A: Key is good for authentication (no used).</li>
+					</ul>
+					<p></p>
+				</section>
+
+				<section>
+					<p>Usage configuration:</p>
+					<ul>
+						<li>Default master key has usage SC.</li>
+						<li>Master key is the only key that has C.</li>
+						<li>For encryption, you need to generate a subkey with E.</li>
+						<li>For convenient, you can generate a subkey with S.</li>
+					</ul>
+					<p></p>
+					<pre><code data-trim contenteditable>
+pub  4096R/03F4552D  created: 2013-07-29  expires: 2013-12-31  usage: SC
+                     trust: ultimate      validity: ultimate
+sub  4096R/F2B3DABF  created: 2013-07-29  expires: never       usage: E
+sub  4096R/285C6865  created: 2013-07-29  expires: never       usage: S
+					</code></pre>
+				</section>
+
+				<section>
+					<p>fingerprint is used to identify a key</p>
+					<pre><code data-trim contenteditable>
+czchen@kelemvor:~% gpg --fingerprint $GPGMASTERKEY
+pub   4096R/03F4552D 2013-07-29 [expires: 2013-12-31]
+      Key fingerprint = EC9F 905D 866D BE46 A896  C827 BE0C 9242 03F4 552D
+uid                  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+uid                  [jpeg image of size 4949]
+sub   4096R/F2B3DABF 2013-07-29
+sub   4096R/285C6865 2013-07-29
+					</code></pre>
+				</section>
+
+				<section>
+					<p>Expired date</p>
+					<p>It is good to set a expired date because:</p>
+					<ul>
+						<li>You may lost your master private key, and revocation certificate.</li>
+						<li>It forces others to refresh your key in their keyring.</li>
+						<li>You can adjust the expired date by your private master key.</li>
+					</ul>
+				</section>
+
+				<section>
+					<pre><code data-trim contenteditable>
+czchen@kelemvor:~% gpg --list-sigs $GPGMASTERKEY
+pub   4096R/03F4552D 2013-07-29 [expires: 2013-12-31]
+uid                  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+sig 3        03F4552D 2013-08-11  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+sig          524E09E7 2013-08-03  Chu-Siang Lai (凍仁翔) &lt;chusiang.lai@gmail.com&gt;
+...
+uid                  [jpeg image of size 4949]
+sig 3        03F4552D 2013-08-11  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+sig          524E09E7 2013-08-03  Chu-Siang Lai (凍仁翔) &lt;chusiang.lai@gmail.com&gt;
+...
+sub   4096R/F2B3DABF 2013-07-29
+sig          03F4552D 2013-08-11  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+sub   4096R/285C6865 2013-07-29
+sig          03F4552D 2013-08-11  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+					</code></pre>
 				</section>
 
 				<section>
 					<h2>References</h2>
+					<p><a href="https://wiki.debian.org/subkeys">Using OpenPGP subkeys in Debian development</a></p>
+					<p><a href="http://www.g-loaded.eu/2010/11/01/change-expiration-date-gpg-key/">How to change the expiration date of a GPG key</a></p>
 					<p><a href="http://www.codemud.net/~thinker/GinGin_CGI.py/show_id_doc/478">保護你的隱私，從 PGP 開始!</a></p>
+					<p><a href="http://blog.nutsfactory.net/2013/08/08/coscup-2013-key-signing-party-tips/">COSCUP 2013 Key Signing Party 兩三事</a></p>
 				</section>
 
 			</div>
