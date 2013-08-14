@@ -49,7 +49,7 @@
 				</section>
 
 				<section>
-					<h2>The Purpose of PGP</h2>
+					<h2>The Purposes of PGP</h2>
 					<ul>
 						<li>Verify signature of message</li>
 						<li>Send an ecnrypted message</li>
@@ -86,25 +86,33 @@
 				</section>
 
 				<section>
-					<p>You need to have a PGP key first before joining keysigning party.</p>
-					<p>Tne <a href="http://www.gnupg.org/">GNU Privacy Guard (GnuPG)</a> is used to generate PGP key.</p>
+					<h2>Generate a PGP Key</h2>
+					<p>Use <a href="http://www.gnupg.org/">GNU Privacy Guard (GnuPG)</a></p>
 				</section>
 
 				<section>
 					<p>A key in GnuPG may contain the following items:</p>
 					<ul>
-						<li>master key</li>
-						<li>key usage</li>
-						<li>fingerprint</li>
-						<li>expired date</li>
-						<li>subkey</li>
-						<li>uid</li>
-						<li>sig</li>
+						<li>Master Key</li>
+						<li>Subkey</li>
+						<li>Usage</li>
+						<li>Fingerprint</li>
+						<li>Expired Date</li>
+						<li>UID</li>
+						<li>Signature</li>
 					</ul>
 				</section>
 
 				<section>
-					<p>Master key is key of key. It shall be stored in offline media. It is used only in the following scenarios <em>only</em>:</p>
+					<h2>Master Key</h2>
+					<p>Key of key</p>
+					<p>Shall be stored in offline media</p>
+					<p>Key length shall be greater than or equal to 4096</p>
+					<p>Keyid is used to select key in gpg, which is 32-bit hexadecimal value</p>
+				</section>
+
+				<section>
+					<h2>Usage of Master Key</h2>
 					<ul>
 						<li>when you certify someone else's key</li>
 						<li>when you need to create a new subkey</li>
@@ -113,7 +121,13 @@
 				</section>
 
 				<section>
-					<p>Usage is the capability of key:</p>
+					<h2>Subkey</h2>
+					<p>Another key pair managed by master key</p>
+					<p>Can be used to signing and encrypt</p>
+				</section>
+
+				<section>
+					<h2>Usage</h2>
 					<ul>
 						<li>S: Key is good for signatures.</li>
 						<li>E: Key is good for encryption.</li>
@@ -124,26 +138,38 @@
 				</section>
 
 				<section>
-					<p>Usage configuration:</p>
+					<h2>Key Usage Configuration</h2>
 					<ul>
 						<li>Default master key has usage SC.</li>
 						<li>Master key is the only key that has C.</li>
 						<li>For encryption, you need to generate a subkey with E.</li>
 						<li>For convenient, you can generate a subkey with S.</li>
 					</ul>
-					<p></p>
+				</section>
+				<section>
 					<pre><code data-trim contenteditable>
+czchen@kelemvor:~% gpg --edit-key $PGPKEY
+gpg (GnuPG) 1.4.12; Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Secret key is available.
+
 pub  4096R/03F4552D  created: 2013-07-29  expires: 2013-12-31  usage: SC
                      trust: ultimate      validity: ultimate
 sub  4096R/F2B3DABF  created: 2013-07-29  expires: never       usage: E
 sub  4096R/285C6865  created: 2013-07-29  expires: never       usage: S
+[ultimate] (1). ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+[ultimate] (2)  [jpeg image of size 4949]
+
 					</code></pre>
 				</section>
 
 				<section>
-					<p>fingerprint is used to identify a key</p>
+					<h2>Fingerprint</h2>
+					<p>Use to identify a key</p>
 					<pre><code data-trim contenteditable>
-czchen@kelemvor:~% gpg --fingerprint $GPGMASTERKEY
+czchen@kelemvor:~% gpg --fingerprint $PGPKEY
 pub   4096R/03F4552D 2013-07-29 [expires: 2013-12-31]
       Key fingerprint = EC9F 905D 866D BE46 A896  C827 BE0C 9242 03F4 552D
 uid                  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
@@ -154,7 +180,7 @@ sub   4096R/285C6865 2013-07-29
 				</section>
 
 				<section>
-					<p>Expired date</p>
+					<h2>Expired Date</h2>
 					<p>It is good to set a expired date because:</p>
 					<ul>
 						<li>You may lost your master private key, and revocation certificate.</li>
@@ -165,27 +191,133 @@ sub   4096R/285C6865 2013-07-29
 
 				<section>
 					<pre><code data-trim contenteditable>
-czchen@kelemvor:~% gpg --list-sigs $GPGMASTERKEY
+czchen@kelemvor:~% gpg --list-keys $PGPKEY
+pub   4096R/03F4552D 2013-07-29 [expires: 2013-12-31]
+uid                  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+uid                  [jpeg image of size 4949]
+sub   4096R/F2B3DABF 2013-07-29
+sub   4096R/285C6865 2013-07-29
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>UID</h2>
+					<p>UID is your identity (name + email or photo)</p>
+					<p>A key can have many uid for different email</p>
+					<p>Generally require 2 forms of government-issued photo ID to prove your identity</p>
+					<p>Other can reject to certify your key due to inproperly UID</p>
+				</section>
+
+				<section>
+					<h2>Signature</h2>
+					<p>Someone can certify your UID to prove the ownership of key.</p>
+					<p>Master key certifies all its UID and subkey with certificate check level 3.</p>
+					<p>You can certify UID with different certificate check level, see manual for more information.</p>
+				</section>
+
+				<section>
+					<pre><code data-trim contenteditable>
 pub   4096R/03F4552D 2013-07-29 [expires: 2013-12-31]
 uid                  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
 sig 3        03F4552D 2013-08-11  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
 sig          524E09E7 2013-08-03  Chu-Siang Lai (凍仁翔) &lt;chusiang.lai@gmail.com&gt;
-...
-uid                  [jpeg image of size 4949]
-sig 3        03F4552D 2013-08-11  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
-sig          524E09E7 2013-08-03  Chu-Siang Lai (凍仁翔) &lt;chusiang.lai@gmail.com&gt;
-...
-sub   4096R/F2B3DABF 2013-07-29
-sig          03F4552D 2013-08-11  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
-sub   4096R/285C6865 2013-07-29
-sig          03F4552D 2013-08-11  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+sig          E6A6C7C0 2013-08-03  Yao-Po Wang (王堯坡) &lt;blue119@gmail.com&gt;
+sig 2        E9D4AEB6 2013-08-03  Wei-Cheng Pan (潘韋成) &lt;legnaleurc@gmail.com&gt;
 					</code></pre>
+				</section>
+
+				<section>
+					<h2>Generate PGP Key</h2>
+					<pre><code data-trim contenteditable>
+czchen@kelemvor:~% gpg --gen-key
+gpg (GnuPG) 1.4.12; Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048) 4096
+...
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Generate Subkey</h2>
+					<pre><code data-trim contenteditable>
+czchen@kelemvor:~% gpg --edit-key $PGPKEY
+gpg (GnuPG) 1.4.12; Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Secret key is available.
+
+pub  4096R/03F4552D  created: 2013-07-29  expires: 2013-12-31  usage: SC
+                     trust: ultimate      validity: ultimate
+sub  4096R/F2B3DABF  created: 2013-07-29  expires: never       usage: E
+sub  4096R/285C6865  created: 2013-07-29  expires: never       usage: S
+[ultimate] (1). ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+[ultimate] (2)  [jpeg image of size 4949]
+
+gpg> addkey
+...
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Send Your Key to Keyserver</h2>
+					<pre><code data-trim contenteditable>
+gpg --send-keys $PGPKEY
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Join Keysigning Party</h2>
+					<ul>
+						<li>You shall send your key to keyserver.</li>
+						<li>You shall send your key information to coordinator.</li>
+						<li>You shall check your key to ensure others get your key correctly.</li>
+						<li>You shall provide 2 government-issued photo IDs to prove your identify.</li>
+						<li>You shall ensure others check their keys.</li>
+						<li>You shall check others' government-issued photo IDs.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>After Keysigning Party</h2>
+					<ol>
+						<li>Import all keys you want to certify (gpg --recv-keys $KEYID)</li>
+						<li>Certify these keys (gpg --sign-key $KEYID)</li>
+						<li>Export these keys (gpg --armor -o $SIGNATURE --export $KEYID)</li>
+						<li>Encrypt them with owner encrypt key (gpg -r $KEYID $SIGNATURE)</li>
+						<li>Email $SIGNATURE to its owner</li>
+						<li>Remove all imported keys (gpg --delete-key $KEYID)</li>
+					</ol>
+				</section>
+
+				<section>
+					<p>Or you can just use caff in signing-party package in debian/ubnutu</p>
+				</section>
+
+				<section>
+					<h2>Receive Signature from Other</h2>
+					<ol>
+						<li>Decrypt it (gpg -o $SIGNATURE -d $MSG)</li>
+						<li>Import it (gpg --import $SIGNATURE)</li>
+						<li>Check if the signature is correctly signture to you by sender</li>
+						<li>Upload your key (gpg --send-keys $PGPKEY)</li>
+					</ol>
 				</section>
 
 				<section>
 					<h2>References</h2>
 					<p><a href="https://wiki.debian.org/subkeys">Using OpenPGP subkeys in Debian development</a></p>
 					<p><a href="http://www.g-loaded.eu/2010/11/01/change-expiration-date-gpg-key/">How to change the expiration date of a GPG key</a></p>
+					<p><a href="https://www.debian-administration.org/users/dkg/weblog/97">OpenPGP User ID Comments considered harmful</a></p>
 					<p><a href="http://www.codemud.net/~thinker/GinGin_CGI.py/show_id_doc/478">保護你的隱私，從 PGP 開始!</a></p>
 					<p><a href="http://blog.nutsfactory.net/2013/08/08/coscup-2013-key-signing-party-tips/">COSCUP 2013 Key Signing Party 兩三事</a></p>
 				</section>
