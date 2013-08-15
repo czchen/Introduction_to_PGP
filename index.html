@@ -105,14 +105,14 @@
 
 				<section>
 					<h2>Master Key</h2>
-					<p>Key of key</p>
-					<p>Shall be stored in offline media</p>
-					<p>Key length shall be greater than or equal to 4096</p>
-					<p>Keyid is used to select key in gpg, which is 32-bit hexadecimal value</p>
+					<ul>
+						<li>Key of key</li>
+						<li>Shall be stored in offline media</li>
+					</ul>
 				</section>
 
 				<section>
-					<h2>Usage of Master Key</h2>
+					<h2>When to Use Master Key?</h2>
 					<ul>
 						<li>when you certify someone else's key</li>
 						<li>when you need to create a new subkey</li>
@@ -122,16 +122,18 @@
 
 				<section>
 					<h2>Subkey</h2>
-					<p>Another key pair managed by master key</p>
-					<p>Can be used to signing and encrypt</p>
+					<ul>
+						<li>Another key pair managed by master key</li>
+						<li>Can be used to signing and encrypt</li>
+					</ul>
 				</section>
 
 				<section>
-					<h2>Usage</h2>
+					<h2>Usage of Key</h2>
 					<ul>
 						<li>S: Key is good for signatures.</li>
 						<li>E: Key is good for encryption.</li>
-						<li>C: Key is also good to certify other keys.</li>
+						<li>C: Key is good to certify other keys.</li>
 						<li>A: Key is good for authentication (no used).</li>
 					</ul>
 					<p></p>
@@ -202,17 +204,21 @@ sub   4096R/285C6865 2013-07-29
 
 				<section>
 					<h2>UID</h2>
-					<p>UID is your identity (name + email or photo)</p>
-					<p>A key can have many uid for different email</p>
-					<p>Generally require 2 forms of government-issued photo ID to prove your identity</p>
-					<p>Other can reject to certify your key due to inproperly UID</p>
+					<ul>
+						<li>UID is your identity (name + email or photo)</li>
+						<li>A key can have many uid for different email</li>
+						<li>Generally require 2 forms of government-issued photo ID to prove your identity</li>
+						<li>Other can reject to certify your key due to inproperly UID</li>
+					</ul>
 				</section>
 
 				<section>
 					<h2>Signature</h2>
-					<p>Someone can certify your UID to prove the ownership of key.</p>
-					<p>Master key certifies all its UID and subkey with certificate check level 3.</p>
-					<p>You can certify UID with different certificate check level, see manual for more information.</p>
+					<ul>
+						<li>Someone can certify your UID to prove the ownership of your key.</li>
+						<li>Master key crertifies all its UID and subkey with certificate check level 3.</li>
+						<li>You can certify UID with different certificate check level, see manual for more information.</li>
+					</ul>
 				</section>
 
 				<section>
@@ -272,6 +278,29 @@ gpg> addkey
 					<h2>Send Your Key to Keyserver</h2>
 					<pre><code data-trim contenteditable>
 gpg --send-keys $PGPKEY
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Export Key to Other Computer</h2>
+					<pre><code data-trim contenteditable>
+# Export public key
+gpg --armor --output $PUB --export $PGPKEY
+# Export private subkey (dangerous!)
+gpg --armor --output $PRISUB --export-secret-subkeys $PGPKEY
+# Export private master key (extreme dangerous!!)
+gpg --armor --output $PRI --export-secret-keys $PGPKEY
+					</code></pre>
+				</section>
+
+				<section>
+					<pre><code data-trim contenteditable>
+czchen@mystra:~% gpg --list-secret-keys $PGPKEY
+sec#  4096R/03F4552D 2013-07-29 [expires: 2013-12-31]
+uid                  ChangZhuo Chen (陳昌倬) &lt;czchen@gmail.com&gt;
+uid                  [jpeg image of size 4949]
+ssb   4096R/F2B3DABF 2013-07-29
+ssb   4096R/285C6865 2013-07-29
 					</code></pre>
 				</section>
 
